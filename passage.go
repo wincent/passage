@@ -19,7 +19,7 @@ type Request struct {
 var cache map[string][]byte
 
 func main() {
-	cache = make(map[string][]byte)
+	resetCache()
 	path := getSockPath()
 	syscall.Umask(0077)
 	listener, err := net.Listen("unix", path)
@@ -40,11 +40,25 @@ func main() {
 	}()
 	log.Print("Open and ready for business on UNIX socket at ", path)
 
+	reload := make(chan os.Signal, 1)
+	signal.Notify(reload, syscall.SIGUSR1)
+	go func() {
+		for {
+			sig := <-reload
+			log.Print("Got signal ", sig, ": resetting")
+			resetCache()
+		}
+	}()
+
 	// Need to catch signals in order for `defer`-ed clean-up items to run.
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
-	sig := <-c
+	term := make(chan os.Signal, 1)
+	signal.Notify(term, os.Interrupt, os.Kill, syscall.SIGTERM)
+	sig := <-term
 	log.Print("Got signal ", sig)
+}
+
+func resetCache() {
+	cache = make(map[string][]byte)
 }
 
 func getSockPath() string {
