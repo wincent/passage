@@ -55,10 +55,9 @@ func getSockPath() string {
 
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
-
+	decoder := json.NewDecoder(conn)
 	var request Request
-	socketData := []byte("{\"service\":\"test item 1000\",\"account\":\"test name\"}")
-	err := json.Unmarshal(socketData, &request)
+	err := decoder.Decode(&request)
 	if err != nil {
 		log.Print(err)
 		return
@@ -72,9 +71,9 @@ func handleConnection(conn net.Conn) {
 	query.SetReturnData(true)
 	results, err := keychain.QueryItem(query)
 	if err != nil {
-		fmt.Printf("error\n")
+		log.Print(err)
 	} else if len(results) != 1 {
-		fmt.Printf("not found\n")
+		log.Print("not found")
 	} else {
 		password := string(results[0].Data)
 		fmt.Printf(password)
