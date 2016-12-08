@@ -16,7 +16,10 @@ type Request struct {
 	Service string
 }
 
+var cache map[string][]byte
+
 func main() {
+	cache = make(map[string][]byte)
 	path := getSockPath()
 	syscall.Umask(0077)
 	listener, err := net.Listen("unix", path)
@@ -62,6 +65,16 @@ func handleConnection(conn net.Conn) {
 		return
 	}
 
+	cache_key, err := json.Marshal(request)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if cached, exists := cache[string(cache_key)]; exists {
+		conn.Write(cached)
+		log.Print("Wrote result from cache")
+		return
+	}
+
 	query := keychain.NewItem()
 	query.SetSecClass(keychain.SecClassGenericPassword)
 	query.SetService(request.Service)
@@ -74,7 +87,9 @@ func handleConnection(conn net.Conn) {
 	} else if len(results) != 1 {
 		log.Print("Item not found")
 	} else {
-		conn.Write(results[0].Data)
-		log.Print("Wrote")
+		password := results[0].Data
+		conn.Write(password)
+		cache[string(cache_key)] = password
+		log.Print("Wrote result from keychain")
 	}
 }
