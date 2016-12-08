@@ -20,6 +20,7 @@ type Request struct {
 }
 
 var cache map[string][]byte
+var version = "unknown"
 
 func main() {
 	resetCache()
@@ -41,7 +42,7 @@ func main() {
 			go handleConnection(conn)
 		}
 	}()
-	log.Print("Open and ready for business on UNIX socket at ", path)
+	log.Print("passage (version ", version, ") ready for business on UNIX socket at ", path)
 
 	reload := make(chan os.Signal, 1)
 	signal.Notify(reload, syscall.SIGUSR1)
