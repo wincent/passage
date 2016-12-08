@@ -47,7 +47,7 @@ Send a JSON object with keys "service" and "account" to the Passage socket at `~
 echo '{"service":"test item","account":"test name"}' | nc -U ~/.passage.sock
 ```
 
-The resulting password is written back over the socket. You could call this a "write of Passage" (ha!). In the event that the item is missing or there is an error, the connection closes without any output, although errors do get printed to the standard output of the Passage process itself. This is for convenient consumption by clients (ie. so that they don't have to implement JSON passing themselves).
+The resulting password is written back over the socket. You could call this a "write of Passage" (ha!). In the event that the item is missing or there is an error, the connection closes without any output, although errors do get printed to the standard output of the Passage process itself. This is for convenient consumption by clients (ie. so that they don't have to implement JSON parsing themselves).
 
 ### Invalidating the cache
 
