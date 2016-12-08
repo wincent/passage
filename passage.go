@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/keybase/go-keychain"
 	"log"
 	"net"
@@ -73,9 +72,9 @@ func handleConnection(conn net.Conn) {
 	if err != nil {
 		log.Print(err)
 	} else if len(results) != 1 {
-		log.Print("not found")
+		log.Print("Item not found")
 	} else {
-		password := string(results[0].Data)
-		fmt.Printf(password)
+		conn.Write(results[0].Data)
+		log.Print("Wrote")
 	}
 }
