@@ -97,6 +97,12 @@ The `~/.passage.sock` socket is created with user-only (`0700`) permissions, but
 * **Storage in the system keychain, having previously granted "Always Allow" access:** This is problematic if you're using the `security` command-line tool provided by Apple, because once you've granted "Always Allow", you will never be asked for permission again. Even if you intended to grant access only to `my-special-script.sh`, the permission will actually be associated with the `security` tool, which any process can call. So here the security is contingent on an attacker not being able to run code as you (or trick/coerce you into running it).
 * **Storage in plain-text on the filesystem:** The security here is only so good as the security of the filesystem: privileged users will be able to retrieve the password regardless of filesystem permission. An unprivileged, determined attacker with local access will be able to elevate privileges by one means or another and gain access, even in the face of restrictive permissions.
 
+## Troubleshooting
+
+### If the launch agent fails to start
+
+Check for a stale `~/.passage.sock` file, which may have been left behind in the event of a system crash, and remove it.
+
 ## Limitations
 
 Passage uses the [keybase/go-keychain](https://github.com/keybase/go-keychain) library to access the keychain, which currently only knows how to read "generic" (A.K.A. "application") passwords, not "Internet" passwords.
