@@ -25,6 +25,23 @@ var version = "unknown"
 func main() {
 	resetCache()
 	path := getSockPath()
+
+	// Check to see if there is a pre-existing or stale socket present.
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		// Socket already exists.
+		if _, err = net.Dial("unix", path); err == nil {
+			// Socket is live!
+			log.Fatal("Live socket already exists at: " + path)
+		}
+
+		// Likely a stale socket left over after a crash.
+		log.Print("Dead socket found at: " + path + " (removing)")
+		if err = os.Remove(path); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// Start listening.
 	syscall.Umask(0077)
 	listener, err := net.Listen("unix", path)
 	if err != nil {

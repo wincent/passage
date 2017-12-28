@@ -99,10 +99,6 @@ The `~/.passage.sock` socket is created with user-only (`0700`) permissions, but
 
 ## Troubleshooting
 
-### If the launch agent fails to start
-
-Check for a stale `~/.passage.sock` file, which may have been left behind in the event of a system crash, and remove it.
-
 ## Limitations
 
 Passage uses the [keybase/go-keychain](https://github.com/keybase/go-keychain) library to access the keychain, which currently only knows how to read "generic" (A.K.A. "application") passwords, not "Internet" passwords.
