@@ -1,6 +1,6 @@
 # Passage changelog
 
-## master
+## 1.0 (28 December 2017)
 
 - Automatically clean up stale socket files at startup.
 
