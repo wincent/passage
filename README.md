@@ -109,10 +109,6 @@ Passage is written and maintained by Greg Hurrell (greg@hurrell.net).
 
 ## Development
 
-The official Passage source code repo is at:
-
-- http://git.wincent.com/passage.git
-
 Mirrors exist at:
 
 - https://github.com/wincent/passage
