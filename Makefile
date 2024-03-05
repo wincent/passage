@@ -33,8 +33,7 @@ passage-${VERSION}.zip: passage
 	zip $@ passage
 
 upload: passage-${VERSION}.zip
-	aws --curl-options=--insecure put s3.wincent.com/passage/releases/passage-${VERSION}.zip passage-${VERSION}.zip
-	aws --curl-options=--insecure put "s3.wincent.com/passage/releases/passage-${VERSION}.zip?acl" --public
+	aws s3 cp "passage-${VERSION}.zip" s3://wincent/passage/releases/passage-${VERSION}.zip --acl public-read
 
 all: tag build archive upload
 
